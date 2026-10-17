@@ -1,17 +1,15 @@
-# Mermaid topology — rendering test v2
+# Mermaid topology — rendering test v3
 
-This is a **visual test only**. It does not replace the approved architecture or README.
-
-GitHub rendered bold headings, but ignored `<small>`. This version tests `<font size="2">` for subtitles and nonbreaking-space padding to make the rectangles wider.
+**Review only:** natural wider boxes using meaningful labels, without HTML padding tricks. GitHub controls Mermaid text metrics.
 
 ```mermaid
 flowchart TB
-    C["&nbsp;&nbsp;&nbsp;<b>Claro · 500 Mbps</b>&nbsp;&nbsp;&nbsp;<br/><font size='2'>DHCP · Bridge Mode</font>"]
-    V["&nbsp;&nbsp;&nbsp;<b>Vivo · 500 Mbps</b>&nbsp;&nbsp;&nbsp;<br/><font size='2'>PPPoE · Bridge Mode</font>"]
-    M["&nbsp;&nbsp;&nbsp;&nbsp;<b>MikroTik hEX S</b>&nbsp;&nbsp;&nbsp;&nbsp;<br/><font size='2'>RouterOS 7 · PCC · Failover<br/>Firewall · DHCP</font>"]
+    C["<b>Claro · 500 Mbps</b><br/>DHCP WAN · Modem in Bridge Mode"]
+    V["<b>Vivo · 500 Mbps</b><br/>PPPoE WAN · Modem in Bridge Mode"]
+    M["<b>MikroTik hEX S</b><br/>RouterOS 7 · PCC 50/50 · Native Failover<br/>Firewall · NAT · LAN DHCP"]
     J((" "))
-    D1["&nbsp;&nbsp;&nbsp;<b>Deco BE63 #1</b>&nbsp;&nbsp;&nbsp;<br/><font size='2'>Access Point · Ethernet backhaul</font>"]
-    D2["&nbsp;&nbsp;&nbsp;<b>Deco BE63 #2</b>&nbsp;&nbsp;&nbsp;<br/><font size='2'>Access Point · Ethernet backhaul</font>"]
+    D1["<b>Deco BE63 #1</b><br/>Access Point · Ethernet Backhaul"]
+    D2["<b>Deco BE63 #2</b><br/>Access Point · Ethernet Backhaul"]
 
     C --> M
     V --> M
@@ -32,4 +30,4 @@ flowchart TB
     class J junction
 ```
 
-If GitHub also ignores `<font>`, we should avoid fragile HTML-size tricks and use consistent node fonts, keeping the subtitle concise.
+Note: GitHub did not honor the prior subtitle-size approach. This test emphasizes reliable rendering and naturally wider nodes.
