@@ -1,15 +1,16 @@
-# Mermaid topology — rendering test v3
+# Mermaid topology — rendering test v4
 
-**Review only:** natural wider boxes using meaningful labels, without HTML padding tricks. GitHub controls Mermaid text metrics.
+This test uses **Mermaid's actual minimum node width configuration** (`flowchart.minNodeWidth`) instead of text/padding tricks. This setting is supported in current Mermaid, but GitHub's bundled renderer may differ.
 
 ```mermaid
+%%{init: {"flowchart": {"minNodeWidth": 260, "wrappingWidth": 280, "nodeSpacing": 80, "rankSpacing": 70, "curve": "linear"}}}%%
 flowchart TB
-    C["<b>Claro · 500 Mbps</b><br/>DHCP WAN · Modem in Bridge Mode"]
-    V["<b>Vivo · 500 Mbps</b><br/>PPPoE WAN · Modem in Bridge Mode"]
-    M["<b>MikroTik hEX S</b><br/>RouterOS 7 · PCC 50/50 · Native Failover<br/>Firewall · NAT · LAN DHCP"]
+    C["<b>Claro · 500 Mbps</b><br/>DHCP · Bridge Mode"]
+    V["<b>Vivo · 500 Mbps</b><br/>PPPoE · Bridge Mode"]
+    M["<b>MikroTik hEX S</b><br/>RouterOS 7 · PCC · Failover<br/>Firewall · DHCP"]
     J((" "))
-    D1["<b>Deco BE63 #1</b><br/>Access Point · Ethernet Backhaul"]
-    D2["<b>Deco BE63 #2</b><br/>Access Point · Ethernet Backhaul"]
+    D1["<b>Deco BE63 #1</b><br/>AP · Ethernet backhaul"]
+    D2["<b>Deco BE63 #2</b><br/>AP · Ethernet backhaul"]
 
     C --> M
     V --> M
@@ -30,4 +31,4 @@ flowchart TB
     class J junction
 ```
 
-Note: GitHub did not honor the prior subtitle-size approach. This test emphasizes reliable rendering and naturally wider nodes.
+Expected: wide horizontal rectangles without padding text hacks. If unchanged, GitHub's bundled Mermaid likely does not apply the config directive, and a small SVG exported from the same diagram may be more reliable.
