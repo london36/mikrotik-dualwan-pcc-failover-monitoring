@@ -5,7 +5,7 @@
 ```mermaid
 flowchart TB
     LAN["New LAN connection<br/>Client to internet"]
-    PCC["PCC / Mangle<br/>both-addresses:2/0 and 2/1"]
+    PCC["PCC / Mangle<br/>both-addresses:  2/0 and 2/1"]
     A["conn-link1<br/>Routing mark: rt-link1"]
     B["conn-link2<br/>Routing mark: rt-link2"]
     R1["rt-link1<br/>Primary: Claro · Backup: Vivo"]
