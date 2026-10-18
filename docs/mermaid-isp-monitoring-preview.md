@@ -43,7 +43,6 @@ flowchart TB
 
 ## Notes
 
-- **Purpose:** Independent ISP monitoring provides observability and supports further troubleshooting by recording connectivity changes and helping distinguish ISP outages from local network events.
 - Each ISP has **two Netwatch targets** with a 30-second probe interval and 2-second timeout.
 - Four specific routing rules pin the targets to `mon-claro` or `mon-vivo`; the monitoring tables have **no other-ISP fallback**.
 - The aggregator reads all four states every 30 seconds, independently evaluating each ISP. The DOWN/UP conditions shown in the shared diagram apply **per ISP**, not across both ISPs combined.
