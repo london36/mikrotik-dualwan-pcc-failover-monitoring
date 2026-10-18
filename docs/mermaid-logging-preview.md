@@ -1,10 +1,11 @@
-# Diagram 4 — Router Events & WAN Outage Logs (horizontal preview)
+# Diagram 4 — Router Events & WAN Outage Logs (horizontal, equal-width preview)
 
 **Purpose: Pure observability and troubleshooting.**
 
 Two independent, left-to-right logging paths. Neither affects routing or failover.
 
 ```mermaid
+%%{init: {"flowchart": {"minNodeWidth": 300, "nodeSpacing": 60, "rankSpacing": 65, "curve": "linear"}}}%%
 flowchart LR
     E["RouterOS events<br/>Interfaces · DHCP · PPPoE"]
     F["Filter: !debug"]
