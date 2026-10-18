@@ -1,28 +1,29 @@
-# Diagram 2 — PCC, Mangle & Cross-Backup Failover (review)
+# Diagram 2 — PCC, Mangle & Cross-Backup Failover (v2 preview)
 
-**Visual preview only.** This describes routing logic for LAN-originated traffic. It does not depict Netwatch or logging.
+**Review only.** The backup relationship is expressed inside each routing table to avoid crossing arrows and uneven auto-layout.
 
 ```mermaid
-%%{init: {"flowchart": {"minNodeWidth": 250, "nodeSpacing": 85, "rankSpacing": 65, "curve": "linear"}}}%%
+%%{init: {"flowchart": {"minNodeWidth": 230, "nodeSpacing": 65, "rankSpacing": 60, "curve": "linear"}}}%%
 flowchart TB
-    LAN["<b>New LAN connection</b><br/>Client → internet destination"]
-    PCC["<b>PCC in Mangle</b><br/>both-addresses:2/0 · both-addresses:2/1"]
-    A["<b>Connection mark: conn-link1</b><br/>Routing mark → rt-link1"]
-    B["<b>Connection mark: conn-link2</b><br/>Routing mark → rt-link2"]
-    R1["<b>rt-link1</b><br/>Primary: Claro · Backup: Vivo"]
-    R2["<b>rt-link2</b><br/>Primary: Vivo · Backup: Claro"]
-    C["<b>Claro · DHCP</b><br/>Preferred for rt-link1"]
-    V["<b>Vivo · PPPoE</b><br/>Preferred for rt-link2"]
+    LAN["<b>New LAN connection</b><br/>Client to internet"]
+    PCC["<b>PCC / Mangle</b><br/>both-addresses:2/0 and 2/1"]
+
+    A["<b>conn-link1</b><br/>mark-routing: rt-link1"]
+    B["<b>conn-link2</b><br/>mark-routing: rt-link2"]
+
+    R1["<b>rt-link1</b><br/>Primary: Claro (distance 1)<br/>Backup: Vivo (distance 2)"]
+    R2["<b>rt-link2</b><br/>Primary: Vivo (distance 1)<br/>Backup: Claro (distance 2)"]
+
+    C["<b>Claro · DHCP</b><br/>Primary for rt-link1"]
+    V["<b>Vivo · PPPoE</b><br/>Primary for rt-link2"]
 
     LAN --> PCC
     PCC --> A
     PCC --> B
     A --> R1
     B --> R2
-    R1 -->|Preferred| C
-    R2 -->|Preferred| V
-    R1 -.->|Backup if primary route unavailable| V
-    R2 -.->|Backup if primary route unavailable| C
+    R1 --> C
+    R2 --> V
 
     classDef neutral fill:#edf0f4,stroke:#68788c,color:#202b38
     classDef claro fill:#e6f1ff,stroke:#2474c7,color:#173d66
@@ -34,6 +35,6 @@ flowchart TB
     class V vivo
 ```
 
-**Reading the diagram:** Mangle marks connections and selects the relevant policy routing table; each table has a preferred ISP and the other as a backup through route distances. A backup route is selected when the preferred route becomes unavailable. No custom failover script changes routes.
+**Cross-backup:** `rt-link1` prefers Claro and falls back to Vivo; `rt-link2` prefers Vivo and falls back to Claro. Native route distances determine preference. Mangle performs ordinary PCC classification; **no script switches routes**.
 
-**Known limitation:** external reachability loss alone, while a primary gateway/route stays available, does not necessarily switch traffic to the other ISP.
+**Limitation:** an external upstream failure may be logged by Netwatch without triggering route fallback if the preferred route remains available.
