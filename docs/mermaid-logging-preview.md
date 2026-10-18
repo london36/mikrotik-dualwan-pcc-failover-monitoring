@@ -27,7 +27,7 @@ flowchart LR
 
 ## Notes
 
-- **General events:** Interface, DHCP and PPPoE messages with `!debug` exclusions, stored under `usb1-part1/router-events`.
-- **WAN outages:** Confirmed WANMON DOWN/UP events and approximate durations, stored under `usb1-part1/wan-outages`.
+- **General events:** Interface, DHCP and PPPoE messages with `!debug` exclusions, stored as rotating text files under `usb1-part1/router-events` (**12 files, up to 2,000 lines per file**).
+- **WAN outages:** Confirmed WANMON DOWN/UP events and approximate durations, stored as rotating text files under `usb1-part1/wan-outages` (**2 files, up to 500 lines per file**).
 - USB is a simple destination for persistent rotating text logs; other local storage may be used where suitable.
 - **Purpose: Pure observability and troubleshooting.** Logging does not modify routes or affect failover.
