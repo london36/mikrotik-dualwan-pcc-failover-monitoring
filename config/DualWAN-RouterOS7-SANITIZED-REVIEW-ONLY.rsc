@@ -47,8 +47,8 @@ add address-pool=pool-lan interface=bridge-lan lease-time=1d name=dhcp-lan
 /routing table
 add comment="Policy table preferring Link1-DHCP" fib name=rt-link1
 add comment="Policy table preferring Link2-PPPoE" fib name=rt-link2
-add comment="Monitoramento exclusivo Claro" fib name=mon-claro
-add comment="Monitoramento exclusivo Vivo" fib name=mon-vivo
+add comment="Dedicated Claro monitoring" fib name=mon-claro
+add comment="Dedicated Vivo monitoring" fib name=mon-vivo
 
 # ====================================================================
 # 06 — DISK LOG DESTINATIONS (ADAPT USB PATH)
@@ -411,7 +411,7 @@ add check-gateway=none comment="rt-link1: backup via Link2" distance=2 \
     dst-address=0.0.0.0/0 gateway=pppoe-link2 routing-table=rt-link1
 add check-gateway=none comment="rt-link2: preferred via Link2" distance=1 \
     dst-address=0.0.0.0/0 gateway=pppoe-link2 routing-table=rt-link2
-add comment="MONITOR Vivo - somente PPPoE" disabled=no distance=1 \
+add comment="MONITOR Vivo - PPPoE only" disabled=no distance=1 \
     dst-address=0.0.0.0/0 gateway=pppoe-link2 routing-table=mon-vivo
 
 # ====================================================================
@@ -481,8 +481,8 @@ set enabled=yes
 # 29 — TIME SERVERS
 # ====================================================================
 /system ntp client servers
-add address=a.ntp.br comment="NTP Brasil 1"
-add address=b.ntp.br comment="NTP Brasil 2"
+add address=a.ntp.br comment="Brazil NTP 1"
+add address=b.ntp.br comment="Brazil NTP 2"
 add address=time.cloudflare.com comment="NTP Cloudflare"
 add address=time.google.com comment="NTP Google"
 
@@ -490,7 +490,7 @@ add address=time.google.com comment="NTP Google"
 # 30 — WANMON SCHEDULER PERMISSIONS
 # ====================================================================
 /system scheduler
-add comment="WANMON - agregador a cada 30 segundos" !days interval=30s name=\
+add comment="WANMON - aggregator every 30 seconds" !days interval=30s name=\
     wanmon-aggregator-run on-event="/system script run wanmon-aggregator" \
     policy=read,write,policy,test start-date=2026-10-16 start-time=21:12:42
 
@@ -523,15 +523,15 @@ set allowed-interface-list=LAN
 # 35 — FOUR ISOLATED INTERNET PROBES
 # ====================================================================
 /tool netwatch
-add comment="Monitor Internet Claro - Quad9" host=9.9.9.10 \
+add comment="Claro internet probe - Quad9" host=9.9.9.10 \
     ignore-initial-down=yes ignore-initial-up=yes interval=30s name=\
     WANMON-Claro-Quad9 timeout=2s type=simple
-add comment="Monitor Internet Claro - Cloudflare" host=1.1.1.2 \
+add comment="Claro internet probe - Cloudflare" host=1.1.1.2 \
     ignore-initial-down=yes ignore-initial-up=yes interval=30s name=\
     WANMON-Claro-Cloudflare timeout=2s type=simple
-add comment="Monitor Internet Vivo - Quad9" host=149.112.112.10 \
+add comment="Vivo internet probe - Quad9" host=149.112.112.10 \
     ignore-initial-down=yes ignore-initial-up=yes interval=30s name=\
     WANMON-Vivo-Quad9 timeout=2s type=simple
-add comment="Monitor Internet Vivo - Cloudflare" host=1.0.0.2 \
+add comment="Vivo internet probe - Cloudflare" host=1.0.0.2 \
     ignore-initial-down=yes ignore-initial-up=yes interval=30s name=\
     WANMON-Vivo-Cloudflare timeout=2s type=simple
