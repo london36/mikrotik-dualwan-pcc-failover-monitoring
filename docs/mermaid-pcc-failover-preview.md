@@ -1,29 +1,27 @@
-# Diagram 2 — PCC, Mangle & Cross-Backup Failover (v2 preview)
+# Diagram 2 — PCC, Mangle & Cross-Backup Failover (v3 preview)
 
-**Review only.** The backup relationship is expressed inside each routing table to avoid crossing arrows and uneven auto-layout.
+**Review only.** Restores the original crossed-backup flow. Labels now use plain Mermaid text with explicit line breaks, without HTML markup or minimum-node-width overrides, to diagnose GitHub's misaligned text.
 
 ```mermaid
-%%{init: {"flowchart": {"minNodeWidth": 230, "nodeSpacing": 65, "rankSpacing": 60, "curve": "linear"}}}%%
 flowchart TB
-    LAN["<b>New LAN connection</b><br/>Client to internet"]
-    PCC["<b>PCC / Mangle</b><br/>both-addresses:2/0 and 2/1"]
-
-    A["<b>conn-link1</b><br/>mark-routing: rt-link1"]
-    B["<b>conn-link2</b><br/>mark-routing: rt-link2"]
-
-    R1["<b>rt-link1</b><br/>Primary: Claro (distance 1)<br/>Backup: Vivo (distance 2)"]
-    R2["<b>rt-link2</b><br/>Primary: Vivo (distance 1)<br/>Backup: Claro (distance 2)"]
-
-    C["<b>Claro · DHCP</b><br/>Primary for rt-link1"]
-    V["<b>Vivo · PPPoE</b><br/>Primary for rt-link2"]
+    LAN["New LAN connection<br/>Client to internet"]
+    PCC["PCC / Mangle<br/>both-addresses:2/0 and 2/1"]
+    A["conn-link1<br/>Routing mark: rt-link1"]
+    B["conn-link2<br/>Routing mark: rt-link2"]
+    R1["rt-link1<br/>Primary: Claro · Backup: Vivo"]
+    R2["rt-link2<br/>Primary: Vivo · Backup: Claro"]
+    C["Claro · DHCP"]
+    V["Vivo · PPPoE"]
 
     LAN --> PCC
     PCC --> A
     PCC --> B
     A --> R1
     B --> R2
-    R1 --> C
-    R2 --> V
+    R1 -->|Primary| C
+    R2 -->|Primary| V
+    R1 -.->|Backup| V
+    R2 -.->|Backup| C
 
     classDef neutral fill:#edf0f4,stroke:#68788c,color:#202b38
     classDef claro fill:#e6f1ff,stroke:#2474c7,color:#173d66
@@ -35,6 +33,4 @@ flowchart TB
     class V vivo
 ```
 
-**Cross-backup:** `rt-link1` prefers Claro and falls back to Vivo; `rt-link2` prefers Vivo and falls back to Claro. Native route distances determine preference. Mangle performs ordinary PCC classification; **no script switches routes**.
-
-**Limitation:** an external upstream failure may be logged by Netwatch without triggering route fallback if the preferred route remains available.
+**How it works:** PCC/Mangle classifies connections into policy routing tables. Each table prefers one ISP, and the other ISP is its backup when the preferred route is unavailable. Netwatch and logs do not modify routes.
