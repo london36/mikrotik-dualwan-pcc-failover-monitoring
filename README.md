@@ -14,6 +14,33 @@
 | Wi-Fi | Two TP-Link Deco BE63 · AP mode · Ethernet backhaul |
 | LAN services | MikroTik handles routing, DHCP, DNS, NAT, firewall and WAN policies; Decos manage Wi-Fi |
 
+## Network topology
+
+```mermaid
+%%{init: {"flowchart": {"minNodeWidth": 260, "wrappingWidth": 280, "nodeSpacing": 80, "rankSpacing": 70, "curve": "linear"}}}%%
+flowchart TB
+    C["<b>Claro · 500 Mbps</b><br/>DHCP · Bridge Mode"]
+    V["<b>Vivo · 500 Mbps</b><br/>PPPoE · Bridge Mode"]
+    M["<b>MikroTik hEX S</b><br/>RouterOS 7 · PCC · Failover<br/>Firewall · DHCP"]
+    D1["<b>Deco BE63 #1</b><br/>AP · Ethernet backhaul"]
+    D2["<b>Deco BE63 #2</b><br/>AP · Ethernet backhaul"]
+
+    C --> M
+    V --> M
+    M --> D1
+    D1 -->|Ethernet backhaul| D2
+
+    classDef claro fill:#e6f1ff,stroke:#2474c7,color:#173d66
+    classDef vivo fill:#e7f6ec,stroke:#299653,color:#185a33
+    classDef router fill:#edf0f4,stroke:#68788c,color:#202b38
+    classDef deco fill:#f5f5f5,stroke:#999,color:#333
+
+    class C claro
+    class V vivo
+    class M router
+    class D1,D2 deco
+```
+
 ## Design: keep failover simple
 
 We initially explored scripts that modified routes during ISP failures. Those iterations were not sufficiently reliable for this installation, so we chose **native routing tables, route priorities and gateway/interface availability** instead. **No custom script switches production routes.**
@@ -23,6 +50,39 @@ The **cross-backup design** is straightforward: each PCC routing table prefers o
 PCC uses conventional Mangle connection and routing marks with the **`both-addresses:2/0` and `both-addresses:2/1`** classifier for nominal 50/50 distribution. We chose this less granular classifier for a relatively small home: connections between the same client and destination IP tend to stay on the same WAN. That can reduce IP-consistency problems with banking and authentication services, but does not guarantee complete application affinity, 50/50 throughput or bandwidth bonding.
 
 The Claro DHCP client manages DHCP-learned routes, avoiding manual updates when its gateway changes.
+
+### PCC and cross-backup routing
+
+```mermaid
+flowchart TB
+    LAN["New LAN connection<br/>Client to internet"]
+    PCC["PCC / Mangle<br/>both-addresses:  2/0 and 2/1"]
+    A["conn-link1<br/>Routing mark: rt-link1"]
+    B["conn-link2<br/>Routing mark: rt-link2"]
+    R1["rt-link1<br/>Primary: Claro · Backup: Vivo"]
+    R2["rt-link2<br/>Primary: Vivo · Backup: Claro"]
+    C["Claro · DHCP"]
+    V["Vivo · PPPoE"]
+
+    LAN --> PCC
+    PCC --> A
+    PCC --> B
+    A --> R1
+    B --> R2
+    R1 -->|Primary| C
+    R2 -->|Primary| V
+    R1 -.->|Backup| V
+    R2 -.->|Backup| C
+
+    classDef neutral fill:#edf0f4,stroke:#68788c,color:#202b38
+    classDef claro fill:#e6f1ff,stroke:#2474c7,color:#173d66
+    classDef vivo fill:#e7f6ec,stroke:#299653,color:#185a33
+    classDef routing fill:#fff4e6,stroke:#c67a1b,color:#694409
+    class LAN,PCC,A,B neutral
+    class R1,R2 routing
+    class C claro
+    class V vivo
+```
 
 ## Monitoring and logging — separate from routing
 
