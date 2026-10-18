@@ -107,7 +107,9 @@ Controlled monitor-target blackholes and physical cable disconnect/reconnect tes
 - [Related projects](docs/related-projects.md)
 - [Forum introduction draft](docs/forum-article-short.md)
 
-The single-file RouterOS reference is being checked before it is added. It will be a **sectioned reference, not a drop-in installer**.
+- [Sanitized single-file RouterOS 7 reference](config/DualWAN-RouterOS7-SANITIZED-REVIEW-ONLY.rsc)
+
+The `.rsc` matches the approved anonymized review version. It is a **sectioned reference, not a drop-in installer**. In particular, USB partition initialization (`/disk`) is intentionally omitted.
 
 ## Background and acknowledgments
 
