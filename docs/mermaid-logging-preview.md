@@ -1,19 +1,18 @@
-# Diagram 4 — Router Events & WAN Outage Logs (equal-size test)
+# Diagram 4 — Router Events & WAN Outage Logs (clean horizontal preview)
 
 **Purpose: Pure observability and troubleshooting.**
 
-Two independent horizontal logging paths. This revision tests SVG text labels (`htmlLabels: false`) to avoid GitHub's shifted HTML-label alignment, with two lines per rectangle for equal heights.
+This version removes forced minimum-width and SVG-label settings, which caused off-center labels in GitHub. All nodes have two text lines, and Mermaid sizes them naturally.
 
 ```mermaid
-%%{init: {"flowchart": {"htmlLabels": false, "minNodeWidth": 300, "nodeSpacing": 60, "rankSpacing": 65, "curve": "linear"}}}%%
 flowchart LR
-    E["RouterOS events<br/>Interfaces · DHCP · PPPoE"]
-    F["Event filters<br/>Exclude debug: !debug"]
-    G["General event log<br/>router-events · USB"]
+    E["RouterOS events<br/>Interfaces, DHCP, PPPoE"]
+    F["Event filtering<br/>Excludes debug entries"]
+    G["General event records<br/>router-events on USB"]
 
-    W["WANMON aggregator<br/>Confirmed ISP DOWN / UP"]
-    R["WAN outage records<br/>Duration estimate"]
-    U["Outage event log<br/>wan-outages · USB"]
+    W["WANMON aggregator<br/>Confirmed DOWN and UP"]
+    R["Outage event records<br/>Approximate outage duration"]
+    U["Outage log storage<br/>wan-outages on USB"]
 
     E --> F --> G
     W --> R --> U
@@ -28,7 +27,7 @@ flowchart LR
 
 ## Notes
 
-- **General events:** interface, DHCP, and PPPoE messages with `!debug` exclusions; stored under `usb1-part1/router-events`.
-- **WAN outages:** WANMON's confirmed DOWN/UP events and approximate durations; stored under `usb1-part1/wan-outages`.
-- USB is a convenient destination for persistent rotating text logs; internal storage is possible if capacity and write endurance allow.
-- **Purpose: Pure observability and troubleshooting.** Neither logging stream changes routing or failover.
+- **General events:** Interface, DHCP and PPPoE messages with `!debug` exclusions, stored under `usb1-part1/router-events`.
+- **WAN outages:** Confirmed WANMON DOWN/UP events and approximate durations, stored under `usb1-part1/wan-outages`.
+- USB is a simple destination for persistent rotating text logs; other local storage may be used where suitable.
+- **Purpose: Pure observability and troubleshooting.** Logging does not modify routes or affect failover.
