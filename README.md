@@ -2,7 +2,7 @@
 
 **A tested home-network case study: simple route-based failover, consistent PCC routing, and independent ISP monitoring.**
 
-> **Pre-publication review.** Configuration examples are installation-specific and must be adapted before use.
+> **Important:** This is an installation-specific reference, not a drop-in configuration. Adapt it to your network and review each section before use.
 
 ## Network at a glance
 
@@ -105,7 +105,7 @@ Controlled monitor-target blackholes and physical cable disconnect/reconnect tes
 - [Testing](docs/testing-results.md)
 - [Limitations](docs/limitations.md)
 - [Related projects](docs/related-projects.md)
-- [Forum introduction draft](docs/forum-article-short.md)
+- [Forum introduction](docs/forum-article-short.md)
 
 - [Sanitized single-file RouterOS 7 reference](config/DualWAN-RouterOS7-SANITIZED-REVIEW-ONLY.rsc)
 
