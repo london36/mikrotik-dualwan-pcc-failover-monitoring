@@ -1,5 +1,5 @@
 # MikroTik RouterOS 7.24.5 | Dual-WAN PCC + failover + WAN monitoring
-# Sanitized reference from a tested home network. REVIEW ONLY.
+# Sanitized reference from a tested home network. Adapt before use.
 # Adapt interfaces, LAN, ISP credentials and USB paths before use.
 # Do not import on a live router without a backup and rule-by-rule review.
 
