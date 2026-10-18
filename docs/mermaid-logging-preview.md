@@ -1,19 +1,19 @@
-# Diagram 4 — Router Events & WAN Outage Logs (horizontal, equal-width preview)
+# Diagram 4 — Router Events & WAN Outage Logs (equal-size test)
 
 **Purpose: Pure observability and troubleshooting.**
 
-Two independent, left-to-right logging paths. Neither affects routing or failover.
+Two independent horizontal logging paths. This revision tests SVG text labels (`htmlLabels: false`) to avoid GitHub's shifted HTML-label alignment, with two lines per rectangle for equal heights.
 
 ```mermaid
-%%{init: {"flowchart": {"minNodeWidth": 300, "nodeSpacing": 60, "rankSpacing": 65, "curve": "linear"}}}%%
+%%{init: {"flowchart": {"htmlLabels": false, "minNodeWidth": 300, "nodeSpacing": 60, "rankSpacing": 65, "curve": "linear"}}}%%
 flowchart LR
     E["RouterOS events<br/>Interfaces · DHCP · PPPoE"]
-    F["Filter: !debug"]
-    G["router-events<br/>Rotating USB text files"]
+    F["Event filters<br/>Exclude debug: !debug"]
+    G["General event log<br/>router-events · USB"]
 
     W["WANMON aggregator<br/>Confirmed ISP DOWN / UP"]
-    R["WAN outage records<br/>Approximate duration"]
-    U["wan-outages<br/>Rotating USB text files"]
+    R["WAN outage records<br/>Duration estimate"]
+    U["Outage event log<br/>wan-outages · USB"]
 
     E --> F --> G
     W --> R --> U
@@ -28,7 +28,7 @@ flowchart LR
 
 ## Notes
 
-- **General events:** interface, DHCP and PPPoE messages with `!debug` exclusions; stored under `usb1-part1/router-events`.
+- **General events:** interface, DHCP, and PPPoE messages with `!debug` exclusions; stored under `usb1-part1/router-events`.
 - **WAN outages:** WANMON's confirmed DOWN/UP events and approximate durations; stored under `usb1-part1/wan-outages`.
 - USB is a convenient destination for persistent rotating text logs; internal storage is possible if capacity and write endurance allow.
 - **Purpose: Pure observability and troubleshooting.** Neither logging stream changes routing or failover.
